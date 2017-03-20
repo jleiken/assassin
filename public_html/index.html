@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IB Assassin</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script>
+        var mainArr;
+        var hitArr;
+        
+        $(document).ready(function(){
+            mainArr = makeArray();
+            //hitArr = new Array();
+        });
+        
+        $(document).ready(function(){
+            $("#mytextb").keydown(function(e){
+                if(e.which=='13')
+                {
+                    var input = $("#mytextb").val().trim();
+                    if(input.length === 6)
+                        idSubmit();
+                    //else if(input.length === 3)
+                    //    hitSubmit();
+                    else
+                        $("#textfield").text("Enter valid input");
+                    $("#mytextb").val("");
+                    $("#mytextb").focusout();
+                }
+            });
+        });
+        
+        $(document).ready(function(){
+            $("#targeter").click(function(){
+                idSubmit();
+            });
+        });
+        
+        /*$(document).ready(function(){
+            $("#register").click(function(){
+                hitSubmit();
+            });
+        });
+        
+        $(document).ready(function(){
+            $("#viewing").click(function(){
+                if(hitArr.length === 0)
+                    $("#textfield").text("No hits registered yet");
+                else
+                {
+                    $("#textfield").text(hitArr[0].toString());
+                    for(var i = 1; i<hitArr.length; i++)
+                    {
+                        $("#textfield").append("<br>"+hitArr[i].toString());
+                    }
+                }
+            });
+        });*/
+        
+        function idSubmit()
+        {
+            var id = $("#mytextb").val().trim();
+            if(id === "" || id.length !== 6)
+            {
+                $("#textfield").text("Enter an ID");
+                return;
+            }
+            var ind = searchArray(mainArr,id);
+            if(ind !== -1)
+            {
+                var str = mainArr[ind];
+                var tar = mainArr[ind+1];
+                /*if(searchArray(hitArr,str.substring(0,str.indexOf(","))) !== -1)
+                {
+                    $("#textfield").text("Your name is: " + str.substring(0,str.indexOf(",")));
+                    $("#textfield").append("<br>You have already hit and/or been hit");
+                    $("#textfield").append("<br>When somebody hits you, give them this number: " + str.substring(str.length-4));
+                    return;
+                }
+                else
+                {*/
+                    $("#textfield").text("Your name is: " + str.substring(0,str.indexOf(",")));
+                    //$("#textfield").append("<br>When somebody hits you, give them this number: " + str.substring(str.length-4));
+                    $("#textfield").append("<br>Your target is: " + tar.substring(0,tar.indexOf(",")));
+            }
+            else
+                $("#textfield").text("Your ID was not found");
+        }
+ 
+        /*function hitSubmit()
+        {
+            var hit = $("#mytextb").val().trim();
+            if(hit === "" || hit.length !== 3)
+            {
+                $("#textfield").text("Enter a hit number");
+                return;
+            }
+            hit = hit+" ";
+            var ind = searchArray(mainArr,hit);
+            if(ind !== -1)
+            {
+                if(ind === 0)
+                {
+                    var killer = mainArr[mainArr.length-2];
+                    var killed = mainArr[mainArr.length-1];
+                }
+                else
+                {
+                    var killer = mainArr[ind-1];
+                    var killed = mainArr[ind];
+                }
+                var plaintext = killer.substring(0,killer.indexOf(",")) + " hit " + killed.substring(0,killed.indexOf(","));
+                if(searchArray(hitArr, plaintext) !== -1)
+                {
+                    $("#textfield").text("You have already hit this person");
+                    return;
+                }
+                $("#textfield").text(plaintext);
+                $("#textfield").append("<br>" + killed.substring(0,killed.indexOf(",")) + " is out of commission");
+                hitArr.push(plaintext);
+            }
+            else
+                $("#textfield").text("Your hit number was not found");
+        }*/
+    
+        function searchArray(arr, str)
+        {
+            for(i = 0; i < arr.length; i++)
+            {
+                if(arr[i].indexOf(str) !== -1)
+                    return i;   
+            }
+            return -1;
+        }
+        
+        function makeArray()
+        {
+            var wholeclass = new String("Names should be separated by line spaces and in the format\\\
+				Jacob Leiken, 00000, 000\\\
+				Where the first number is their student id and the second is their random code. The same student should be at the beginning and end of the list so it doesn't have to wrap");
+            var arr = wholeclass.split("\\");
+            return arr;
+        }
+    </script>
+    <style type="text/css">
+        #mymaindiv {
+            border-radius: 5px;
+            background-color: #F8F7F2;
+            //width: 100em;
+            width:fit-content;
+            margin:0 auto;
+            text-align:center;
+        }
+        #mytextb {
+            border-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="mymaindiv">
+    <!--<h3>Enter 6-Digit ID or 3 digit hit value</h3>
+    <input type="text" id="mytextb" maxlength="6" placeholder="000000 or 000">-->
+    <h3>Enter 6-Digit ID</h3>
+    <input type="text" id="mytextb" maxlength="6" placeholder="000000">
+    <br><br>
+    <button type="submit" id="targeter" class="btn btn-default">Get your info</button>
+    <!--<button id="register" type="button" class="btn btn-default">Enter hit</button>
+    <button id="viewing" type="button" class="btn btn-info">View hits/hit counter</button>-->
+    <br>
+    <p id="textfield"></p>
+    </div>
+</body>
+</html>
